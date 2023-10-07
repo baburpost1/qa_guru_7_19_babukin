@@ -17,3 +17,6 @@ def validate_schema(current_response, schema_name):
 # TODO: добавить шаг аллюра
 def assert_status_code(current_status_code, expected_status_code):
     assert current_status_code == expected_status_code, f'Current status_code == {current_status_code}; Expected status_code == {expected_status_code} '
+
+def assert_empty_response(response):
+    assert response.text == '{}'

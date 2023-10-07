@@ -1,5 +1,4 @@
 import requests, math
-from tests.requres import schemas
 from tests.requres.utils.link import ApiRoutes, get_full_link
 from tests.requres.utils.assertions import validate_schema, assert_status_code, load_schema
 
@@ -36,9 +35,44 @@ def test_get_list_of_users_with_params():
     users = list(response.json()['data'])
     for user in users:
         validate_schema(user, 'user_data.json')
-    assert response.json()['total_pages'] == math.ceil((response.json()['total'])/response.json()['per_page'])
+    assert response.json()['total_pages'] == math.ceil((response.json()['total']) / response.json()['per_page'])
 
 
 def test_get_nonexistent_user():
-    user_id = 2
+    user_id = 99999
     user_url = f'{get_full_link(ApiRoutes.USER)}/{user_id}'
+    response = requests.get(url=user_url)
+    assert_status_code(response.status_code, 404)
+
+
+def test_create_user_positive():
+    create_user_url = get_full_link(ApiRoutes.USER)
+    # TODO: а если в теле запроса  больше параметров? или какая-нибудь запустанная схема - не писать же это каждый раз руками
+    body = {"name": "John Snow", "job": "knowing nothing", "test_param": "test"}
+    response = requests.post(url=create_user_url, json=body)
+    assert_status_code(response.status_code, 201)
+    validate_schema(response.json(), 'post_users.json')
+    assert response.json()['test_param'] == body.get("test_param")
+
+
+def test_change_user_positive():
+    user_id = 1
+    update_user_link = f'{get_full_link(ApiRoutes.USER)}/{user_id}'
+    body = {"test_param": "test"}
+    response = requests.patch(url=update_user_link, json=body)
+    assert_status_code(response.status_code, 200)
+    validate_schema(response.json(), 'update_user.json')
+    assert response.json()['test_param'] == body.get("test_param")
+
+    response = requests.put(url=update_user_link, json=body)
+    assert_status_code(response.status_code, 200)
+    validate_schema(response.json(), 'update_user.json')
+    assert response.json()['test_param'] == body.get("test_param")
+
+
+def test_delete_user():
+    user_id = 1
+    delete_user_url = f'{get_full_link(ApiRoutes.USER)}/{user_id}'
+    response = requests.delete(url=delete_user_url)
+    assert_status_code(response.status_code, 204)
+    assert response.text == ''
