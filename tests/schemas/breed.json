@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "breed": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "origin": {
+      "type": "string"
+    },
+    "coat": {
+      "type": "string"
+    },
+    "pattern": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "breed",
+    "country",
+    "origin",
+    "coat",
+    "pattern"
+  ]
+}
