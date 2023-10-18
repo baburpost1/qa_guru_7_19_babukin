@@ -21,6 +21,6 @@ def get_full_link(route):
     if str(route.__class__) == "<enum 'ApiRoutesRequres'>":
         return str(config.REQURES_BASE_PART_URL + route.value)
     if str(route.__class__) == "<enum 'ApiRoutesCatfacts'>":
-        return str(config.REQURES_BASE_PART_URL + route.value)
+        return str(config.CATFACT_BASE_PART_URL + route.value)
     else:
         return ValueError
